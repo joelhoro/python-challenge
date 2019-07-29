@@ -7,14 +7,25 @@ with open(electiondata, newline="") as csvfile:
     totalvotes = 0
     candidates = []
     votes = {}
-
+    maxvotes = 0
     for row in csvreader:
         totalvotes = totalvotes+1
         voter_id, county, candidate = row
         if candidate not in votes.keys():
             votes[candidate] = 0
         votes[candidate] += 1
+        if votes[candidate]>maxvotes:
+            maxvotes = votes[candidate]
+            winner = candidate
 
-    print(votes)
-    print(votes.keys())
-    print(votes.values())
+    print("Total votes: "+ str(totalvotes))
+    print("The winner is "+winner)
+    for candidate in votes.keys():
+        print(f"{candidate}: {votes[candidate]}, {votes[candidate]/totalvotes*100}%")
+
+output_file = os.path.join("./poll_final.txt")
+with open(output_file, "w") as text_file:
+    print("Total votes: "+ str(totalvotes),file=text_file)
+    print("The winner is "+winner,file=text_file)
+    for candidate in votes.keys():
+        print(f"{candidate}: {votes[candidate]}, {votes[candidate]/totalvotes*100}%",file=text_file)
